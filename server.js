@@ -1,14 +1,15 @@
 'use strict';
 
+const PORT = process.env.PORT || 3000;
+
 require('dotenv').config();
 
 const express = require('express');
-const pg = require('pg');
 const morgan = require('morgan');
 const cors = require('cors');
-const PORT = process.env.PORT || 3000;
 const app = express();
-const client = new pg.Client(process.env.DATABASE_URL);
+const bcrypt = require('bcrypt');
+const base64 = require('base-64');
 
 app.use(cors());
 app.use(morgan('dev'));
@@ -19,24 +20,38 @@ app.use(express.urlencoded({ extended: true }));
 
 //-----Routes
 app.get('/', handleHome);
+app.post('/signup', signUP);
+app.post('/signin', basicAuth, signIN);
+app.get('users', getUsers);
 
 //-----Error Routes
 app.use('*', handleNotFound);
 app.use(handleError);
 
+
+
+
+function signUP(req, res){
+
+}
+
+function signIN(req, res){
+    
+}
+
+function getUsers(req, res){
+    
+}
 //-----404 Errors
 function handleNotFound(req, res) {
-  res.status(404).send('Route not found');
+  res.status(404).send('Route Not Found!');
 }
 
 //-----Broken Errors
 function handleError(error, res) {
   console.log(error);
-  res.render('pages/error', {data: error.message, pgName: 'Error 404'});
+  res.status(error).send('BROKEN!');
 }
   
-  
-//-----Listen on Port, Start the server
-client.connect(() => {
-  app.listen(PORT, () => console.log(`Server is up on port: ${PORT}`));
-});
+//-----Listen on Port
+app.listen(PORT, () => console.log(`Server is up on port: ${PORT}`));
