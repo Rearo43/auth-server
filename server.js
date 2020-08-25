@@ -3,12 +3,10 @@
 require('dotenv').config();
 
 const express = require('express');
-const pg = require('pg');
 const morgan = require('morgan');
 const cors = require('cors');
 const PORT = process.env.PORT || 3000;
 const app = express();
-const client = new pg.Client(process.env.DATABASE_URL);
 
 app.use(cors());
 app.use(morgan('dev'));
@@ -36,7 +34,5 @@ function handleError(error, res) {
 }
   
   
-//-----Listen on Port, Start the server
-client.connect(() => {
-  app.listen(PORT, () => console.log(`Server is up on port: ${PORT}`));
-});
+//-----Listen on Port
+app.listen(PORT, () => console.log(`Server is up on port: ${PORT}`));
